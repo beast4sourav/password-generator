@@ -1,36 +1,45 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const PasswordGenerator = () => {
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [length, setLength] = useState(8);
   const [includeNumbers, setIncludeNumbers] = useState(false);
   const [includeCharacters, setIncludeCharacters] = useState(false);
 
   const generatePassword = () => {
-    const numbers = "0123456789";
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    let charset = "";
+    const numbers = '0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let charset = '';
 
     if (includeNumbers) charset += numbers;
     if (includeCharacters) charset += characters;
 
     if (charset.length === 0) {
-      alert("Please select at least one character type.");
+      toast.error('Please select at least one character type.');
       return;
     }
 
-    let generatedPassword = "";
+    let generatedPassword = '';
     for (let i = 0; i < length; i++) {
       const randomIndex = Math.floor(Math.random() * charset.length);
       generatedPassword += charset[randomIndex];
     }
 
     setPassword(generatedPassword);
+    toast.success('Password generated successfully!');
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(password);
-    alert("Password copied to clipboard!");
+    if (password) {
+      navigator.clipboard.writeText(password);
+      toast.info('Password copied to clipboard!');
+    } else {
+      toast.error('No password to copy!');
+    }
   };
 
   return (
@@ -40,7 +49,7 @@ const PasswordGenerator = () => {
         type="text"
         value={password}
         readOnly
-        className="w-full p-2 mb-4 border rounded text-black" // Added text-black class
+        className="w-full p-2 mb-4 border rounded text-black"
       />
       <button
         onClick={copyToClipboard}
